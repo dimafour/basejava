@@ -6,52 +6,57 @@ import java.util.Arrays;
 
 
 public abstract class AbstractArrayStorage implements Storage {
-    protected static final int STORAGE_LIMIT = 10000;
-    protected static final Resume[] storage = new Resume[STORAGE_LIMIT];
+    final protected static int STORAGE_LIMIT = 10000;
+    final protected static Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
 
     @Override
-    public int size() {
+    final public int size() {
         return size;
     }
 
-    public void save(Resume r) {
+    @Override
+    final public void save(Resume r) {
+        int index = getIndex(r.getUuid());
         if (size == storage.length) {
             System.out.println("Error: Storage is full%n");
-        } else if (getIndex(r.getUuid()) >= 0) {
+        } else if (index >= 0) {
             System.out.printf("Error: Resume %s is already in the storage%n", r);
         } else {
-            storage[size++] = r;
+            pasteNewResume(r, index);
+            size++;
         }
     }
 
-    public Resume get(String uuid) {
-        int resumeIndex = getIndex(uuid);
-        if (resumeIndex != -1) {
-            return storage[resumeIndex];
+    @Override
+    final public Resume get(String uuid) {
+        int index = getIndex(uuid);
+        if (index != -1) {
+            return storage[index];
         } else {
             System.out.printf("Error: Resume %s is not found%n", uuid);
             return null;
         }
     }
 
-    public void delete(String uuid) {
-        int resumeIndex = getIndex(uuid);
-        if (resumeIndex != -1) {
-            size--;
-            storage[resumeIndex] = storage[size];
-            storage[size] = null;
+    @Override
+    final public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index >= 0) {
+            fillDeletedResume(index);
+            storage[size--] = null;
         } else {
             System.out.printf("Error: Resume %s is not found%n", uuid);
         }
     }
 
-    public Resume[] getAll() {
+    @Override
+    final public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
-
-    public void update(Resume r) {
+    @Override
+    final public void update(Resume r) {
         int index = getIndex(r.getUuid());
         if (index != -1) {
             storage[index] = r;
@@ -61,11 +66,16 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public void clear() {
+    @Override
+    final public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     protected abstract int getIndex(String uuid);
+
+    protected abstract void pasteNewResume(Resume r, int index);
+
+    protected abstract void fillDeletedResume(int index);
 
 }
