@@ -9,13 +9,9 @@ import java.util.Arrays;
 
 
 public abstract class AbstractArrayStorage implements Storage {
-    protected final static int STORAGE_LIMIT = 10000;
-    protected Resume[] storage;
+    final static int STORAGE_LIMIT = 10000;
+    protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
-
-    public AbstractArrayStorage() {
-        storage = new Resume[STORAGE_LIMIT];
-    }
 
     @Override
     public final int size() {
