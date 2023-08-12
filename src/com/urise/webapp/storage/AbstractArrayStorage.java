@@ -1,7 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
@@ -19,37 +17,24 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public final void save(Resume r) {
-        int index = getIndex(r.getUuid());
+    public final void doSave(Resume r, Object index) {
         if (size == storage.length) {
             throw new StorageException("Storage is full", r.getUuid());
-        } else if (index >= 0) {
-            throw new ExistStorageException(r.getUuid());
         } else {
-            pasteNewResume(r, index);
+            pasteNewResume(r, (Integer) index);
             size++;
         }
     }
 
     @Override
-    public final Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            return storage[index];
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+    public final Resume doGet(Object index) {
+        return storage[(int) index];
     }
 
     @Override
-    public final void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            fillDeletedResume(index);
-            storage[--size] = null;
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+    public final void doDelete(Object index) {
+        fillDeletedResume((int) index);
+        storage[--size] = null;
     }
 
     @Override
@@ -58,14 +43,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public final void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index >= 0) {
-            storage[index] = r;
-            System.out.printf("Resume %s is updated%n", r);
-        } else {
-            throw new NotExistStorageException(r.getUuid());
-        }
+    public final void doUpdate(Resume r, Object index) {
+        storage[(int) index] = r;
+
     }
 
     @Override
@@ -74,9 +54,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
+    protected boolean isExist(Object index) {
+        return (int) index >= 0;
+    }
 
     protected abstract void pasteNewResume(Resume r, int index);
 
     protected abstract void fillDeletedResume(int index);
+
+    protected abstract Integer getSearchKey(String uuid);
 
 }

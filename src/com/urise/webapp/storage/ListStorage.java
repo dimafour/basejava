@@ -1,9 +1,6 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
-
 import java.util.ArrayList;
 
 
@@ -16,20 +13,23 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void save(Resume r) {
-        if (!storage.contains(r)) {
-            storage.add(r);
-        } else throw new ExistStorageException(r.getUuid());
+    public void doSave(Resume r, Object searchKey) {
+        storage.add(r);
     }
 
     @Override
-    public Resume get(String uuid) {
-        return storage.get(getIndex(uuid));
+    public Resume doGet(Object searchKey) {
+        return storage.get((int) searchKey);
     }
 
     @Override
-    public void delete(String uuid) {
-        storage.remove(getIndex(uuid));
+    public void doDelete(Object searchKey) {
+        storage.remove((int) searchKey);
+    }
+
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return (int) searchKey >= 0;
     }
 
     @Override
@@ -43,18 +43,13 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void update(Resume r) {
-        storage.set(getIndex(r.getUuid()), r);
+    public void doUpdate(Resume r, Object searchKey) {
+        storage.set((int) searchKey, r);
     }
 
-    protected int getIndex(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         Resume r = new Resume(uuid);
-        int index = storage.indexOf(r);
-        if (index != -1) {
-            return index;
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+        return storage.indexOf(r);
     }
 
 }
