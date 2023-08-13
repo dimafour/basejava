@@ -1,11 +1,12 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
+
 import java.util.ArrayList;
 
 
 public class ListStorage extends AbstractStorage {
-    ArrayList<Resume> storage = new ArrayList<>();
+    private final ArrayList<Resume> storage = new ArrayList<>();
 
     @Override
     public void clear() {
@@ -48,8 +49,12 @@ public class ListStorage extends AbstractStorage {
     }
 
     protected Integer getSearchKey(String uuid) {
-        Resume r = new Resume(uuid);
-        return storage.indexOf(r);
+        for (int i = 0; i < storage.size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 }

@@ -55,7 +55,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void saveOverflow() {
-        if (storage instanceof ListStorage) {
+        if (storage instanceof ListStorage || storage instanceof MapStorage) {
             assertTrue(true);
         } else {
             storage.clear();
