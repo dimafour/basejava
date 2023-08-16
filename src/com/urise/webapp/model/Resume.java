@@ -9,23 +9,34 @@ import java.util.UUID;
 public class Resume implements Comparable<Resume> {
 
     private final String uuid;
+    private final String fullName;
+    protected static final String DEFAULT_NAME = "Name is absent";
 
     public Resume() {
-        this(UUID.randomUUID().toString());
+        this(UUID.randomUUID().toString(), DEFAULT_NAME);
     }
 
     public Resume(String uuid) {
         this.uuid = uuid;
+        this.fullName = DEFAULT_NAME;
+    }
+
+    public Resume(String uuid, String fullName) {
+        this.uuid = uuid;
+        this.fullName = fullName;
     }
 
     public String getUuid() {
         return this.uuid;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
 
     @Override
     public String toString() {
-        return uuid;
+        return uuid + ": " + fullName;
     }
 
 
@@ -46,6 +57,6 @@ public class Resume implements Comparable<Resume> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid);
+        return Objects.hash(uuid, fullName);
     }
 }
