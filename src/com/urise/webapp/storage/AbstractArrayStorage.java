@@ -38,11 +38,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public final List<Resume> getAllSorted() {
+    public final List<Resume> doGetAll() {
         List<Resume> list = new ArrayList<>();
-        Resume[] storageTrimmed = Arrays.copyOfRange(storage, 0, size);
-        Collections.addAll(list, storageTrimmed);
-        list.sort(Comparator.comparing(Resume::getUuid));
+        Collections.addAll(list, Arrays.copyOfRange(storage, 0, size));
         return list;
     }
 

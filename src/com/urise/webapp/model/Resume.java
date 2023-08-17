@@ -16,9 +16,9 @@ public class Resume implements Comparable<Resume> {
         this(UUID.randomUUID().toString(), DEFAULT_NAME);
     }
 
-    public Resume(String uuid) {
-        this.uuid = uuid;
-        this.fullName = DEFAULT_NAME;
+    public Resume(String fullName) {
+        this.uuid = UUID.randomUUID().toString();
+        this.fullName = fullName;
     }
 
     public Resume(String uuid, String fullName) {

@@ -6,32 +6,6 @@ import java.util.*;
 
 public abstract class AbstractMapStorage extends AbstractStorage {
     protected final Map<String, Resume> storage = new HashMap<>();
-
-    @Override
-    protected void doUpdate(Resume r, Object searchKey) {
-        storage.replace((String) searchKey, r);
-    }
-
-    @Override
-    protected void doSave(Resume r, Object searchKey) {
-        storage.put((String) searchKey, r);
-    }
-
-    @Override
-    protected Resume doGet(Object searchKey) {
-        return storage.get((String) searchKey);
-    }
-
-    @Override
-    protected void doDelete(Object searchKey) {
-        storage.remove((String) searchKey);
-    }
-
-    @Override
-    protected boolean isExist(Object searchKey) {
-        return storage.containsKey((String) searchKey);
-    }
-
     @Override
     public void clear() {
         storage.clear();
@@ -42,7 +16,12 @@ public abstract class AbstractMapStorage extends AbstractStorage {
         return storage.size();
     }
 
-    protected abstract Object getSearchKey(String fullName);
+    protected abstract List<Resume> doGetAll();
+    protected abstract void doUpdate(Resume r, Object searchKey);
+    protected abstract void doSave(Resume r, Object searchKey);
+    protected abstract Resume doGet(Object searchKey);
+    protected abstract void doDelete(Object searchKey);
+    protected abstract boolean isExist(Object searchKey);
+    protected abstract Object getSearchKey(String uuid);
 
-    public abstract List<Resume> getAllSorted();
 }

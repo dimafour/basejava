@@ -6,11 +6,9 @@ import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.Extension;
 
-import java.lang.annotation.Target;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,15 +25,15 @@ public abstract class AbstractStorageTest {
 
     }
 
-    protected final Resume[] expectedArrayForMapNameStorage = new Resume[]{RESUME3, RESUME2, RESUME1};
+    protected final Resume[] expectedArrayForMapResumeStorage = new Resume[]{RESUME1, RESUME2, RESUME3};
     static final String UUID1 = "uuid1";
-    static final String FULL_NAME1 = "Peter Petrov";
+    static final String FULL_NAME1 = "Alex Alexandrov";
     static final Resume RESUME1 = new Resume(UUID1, FULL_NAME1);
     static final String UUID2 = "uuid2";
     static final String FULL_NAME2 = "Ivan Ivanov";
     static final Resume RESUME2 = new Resume(UUID2, FULL_NAME2);
     static final String UUID3 = "uuid3";
-    static final String FULL_NAME3 = "Alex Alexandrov";
+    static final String FULL_NAME3 = "Peter Petrov";
     static final Resume RESUME3 = new Resume(UUID3, FULL_NAME3);
     static final String UUID4 = "uuid4";
     static final String FULL_NAME4 = "John Johnson";
@@ -61,17 +59,12 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void save() {
-        if (storage instanceof MapNameStorage) {
-            assertArrayEquals(expectedArrayForMapNameStorage, storage.getAllSorted().toArray());
-            storage.save(RESUME4);
-            assertSize(expectedArrayForMapNameStorage.length + 1);
-            assertGet(RESUME4);
-        } else {
-            assertArrayEquals(expectedList.toArray(), storage.getAllSorted().toArray());
-            storage.save(RESUME4);
-            assertSize(expectedList.size() + 1);
-            assertGet(RESUME4);
-        }
+        storage.save(RESUME4);
+        expectedList.add(RESUME4);
+        expectedList.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
+        assertArrayEquals(expectedList.toArray(), storage.getAllSorted().toArray());
+        assertSize(expectedList.size());
+        assertGet(RESUME4);
     }
 
     @Test
@@ -122,8 +115,8 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAllSorted() {
-        if (storage instanceof MapNameStorage) {
-            assertArrayEquals(expectedArrayForMapNameStorage, storage.getAllSorted().toArray());
+        if (storage instanceof MapResumeStorage) {
+            assertArrayEquals(expectedArrayForMapResumeStorage, storage.getAllSorted().toArray());
         } else {
             assertArrayEquals(expectedList.toArray(), storage.getAllSorted().toArray());
         }
