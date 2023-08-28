@@ -1,7 +1,6 @@
 package com.urise.webapp.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -10,6 +9,8 @@ public class Resume implements Comparable<Resume> {
 
     private final String uuid;
     private final String fullName;
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
     protected static final String DEFAULT_NAME = "Name is absent";
 
     public Resume() {
@@ -36,7 +37,7 @@ public class Resume implements Comparable<Resume> {
 
     @Override
     public String toString() {
-        return uuid + ": " + fullName;
+        return uuid + ": " + fullName + "\n";
     }
 
 
@@ -59,4 +60,30 @@ public class Resume implements Comparable<Resume> {
     public int hashCode() {
         return Objects.hash(uuid, fullName);
     }
+
+    public void addContact(ContactType type, String profile) {
+        contacts.put(type, profile);
+    }
+
+    public void addSectionContent(SectionType type, Section section) {
+        sections.put(type, section);
+    }
+
+    public String allInformation() {
+        StringBuilder sb = new StringBuilder(this.toString());
+        for (ContactType type : contacts.keySet()) {
+            sb.append(type);
+            sb.append(": ");
+            sb.append(contacts.get(type));
+            sb.append("\n");
+        }
+        for (SectionType type : sections.keySet()) {
+            sb.append(type);
+            sb.append(": ");
+            sb.append(sections.get(type));
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
 }

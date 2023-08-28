@@ -5,36 +5,37 @@ import com.urise.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapUuidStorage extends AbstractMapStorage {
+public class MapUuidStorage extends AbstractMapStorage<String> {
     @Override
-    protected Object getSearchKey(String uuid) {
+    protected String getSearchKey(String uuid) {
         return uuid;
     }
 
     @Override
-    protected void doUpdate(Resume r, Object searchKey) {
-        storage.replace((String) searchKey, r);
+    protected void doUpdate(Resume r, String searchKey) {
+        storage.replace(searchKey, r);
     }
 
     @Override
-    protected void doSave(Resume r, Object searchKey) {
-        storage.put((String) searchKey, r);
+    protected void doSave(Resume r, String searchKey) {
+        storage.put(searchKey, r);
     }
 
     @Override
-    protected Resume doGet(Object searchKey) {
-        return storage.get((String) searchKey);
+    protected Resume doGet(String searchKey) {
+        return storage.get(searchKey);
     }
 
     @Override
-    protected void doDelete(Object searchKey) {
-        storage.remove((String) searchKey);
+    protected void doDelete(String searchKey) {
+        storage.remove(searchKey);
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return storage.containsKey((String) searchKey);
+    protected boolean isExist(String searchKey) {
+        return storage.containsKey(searchKey);
     }
+
     @Override
     protected List<Resume> doGetAll() {
         return new ArrayList<>(storage.values());
