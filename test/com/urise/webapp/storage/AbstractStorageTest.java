@@ -7,38 +7,48 @@ import com.urise.webapp.model.Resume;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.urise.webapp.model.ResumeTestData.createResume;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class AbstractStorageTest {
     protected final Storage storage;
     protected final List<Resume> expectedList = new ArrayList<>();
+    protected final Resume[] expectedArrayForMapResumeStorage = new Resume[]{RESUME1, RESUME2, RESUME3};
+    static final String UUID1 = "uuid1";
+    static final String FULL_NAME1 = "Alex Alexandrov";
+    static final String UUID2 = "uuid2";
+    static final String FULL_NAME2 = "Ivan Ivanov";
+    static final String UUID3 = "uuid3";
+    static final String FULL_NAME3 = "Peter Petrov";
+    static final String UUID4 = "uuid4";
+    static final String FULL_NAME4 = "John Johnson";
+    static final String FAILURE_MESSAGE = "Storage overflow before expected";
+    static Resume RESUME1;
+    static final Resume RESUME2;
+    static final Resume RESUME3;
+    static final Resume RESUME4;
+
+    static {
+        try {
+            RESUME1 = createResume(UUID1, FULL_NAME1);
+            RESUME2 = createResume(UUID2, FULL_NAME2);
+            RESUME3 = createResume(UUID3, FULL_NAME3);
+            RESUME4 = createResume(UUID4, FULL_NAME4);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     {
         expectedList.add(RESUME1);
         expectedList.add(RESUME2);
         expectedList.add(RESUME3);
-
     }
-
-    protected final Resume[] expectedArrayForMapResumeStorage = new Resume[]{RESUME1, RESUME2, RESUME3};
-    static final String UUID1 = "uuid1";
-    static final String FULL_NAME1 = "Alex Alexandrov";
-    static final Resume RESUME1 = new Resume(UUID1, FULL_NAME1);
-    static final String UUID2 = "uuid2";
-    static final String FULL_NAME2 = "Ivan Ivanov";
-    static final Resume RESUME2 = new Resume(UUID2, FULL_NAME2);
-    static final String UUID3 = "uuid3";
-    static final String FULL_NAME3 = "Peter Petrov";
-    static final Resume RESUME3 = new Resume(UUID3, FULL_NAME3);
-    static final String UUID4 = "uuid4";
-    static final String FULL_NAME4 = "John Johnson";
-    static final Resume RESUME4 = new Resume(UUID4, FULL_NAME4);
-    static final String FAILURE_MESSAGE = "Storage overflow before expected";
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;

@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Company {
     private final String name;
@@ -34,5 +35,18 @@ public class Company {
         return "\n" + name + "\n" +
                 url + "\n" +
                 periods;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Company company = (Company) o;
+        return Objects.equals(name, company.name) && Objects.equals(url, company.url) && Objects.equals(periods, company.periods);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, url, periods);
     }
 }

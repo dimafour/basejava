@@ -9,17 +9,16 @@ import java.util.List;
 import static com.urise.webapp.model.ContactType.*;
 import static com.urise.webapp.model.SectionType.*;
 
-public class ResumeDataTest {
+public class ResumeTestData {
 
-    static Resume r;
 
     public static void main(String[] args) throws MalformedURLException {
-        addInformation();
+        Resume r = createResume("uuid0", "Григорий Кислин");
         System.out.println(r.allInformation());
     }
 
-    private static void addInformation() throws MalformedURLException {
-        r = new Resume("uuid0", "Григорий Кислин");
+    public static Resume createResume(String uuid, String fullName) throws MalformedURLException {
+        Resume r = new Resume(uuid, fullName);
         r.addContact(MOBILE, "+7(921) 855-0482");
         r.addContact(LINKEDIN, "https://www.linkedin.com/in/gkislin");
         r.addContact(GITHUB, "https://github.com/gkislin");
@@ -74,7 +73,7 @@ public class ResumeDataTest {
         List<Company> info3 = new ArrayList<>();
         info3.add(jop);
         info3.add(wrike);
-        CompanySection experience = new CompanySection( info3);
+        CompanySection experience = new CompanySection(info3);
         r.addSectionContent(EXPERIENCE, experience);
 
 
@@ -83,21 +82,27 @@ public class ResumeDataTest {
                 new Period(LocalDate.of(2013, 3, 1), LocalDate.of(2013, 5, 30), "", "'Functional Programming Principles in Scala' by Martin Odersky"));
         Company luxoft = new Company("Luxoft",
                 new URL("http://www.luxoft-training.ru/training/catalog/course.html?ID=22366"),
-                new Period(LocalDate.of(2011, 3, 1), LocalDate.of(2011, 4, 30),"", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'"));
+                new Period(LocalDate.of(2011, 3, 1), LocalDate.of(2011, 4, 30), "", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'"));
         Company siemens = new Company("Siemens AG",
                 new URL("http://www.siemens.ru/"),
-                new Period(LocalDate.of(2005, 1, 1), LocalDate.of(2013, 4, 30),"", "3 месяца обучения мобильным IN сетям (Берлин)"));
+                new Period(LocalDate.of(2005, 1, 1), LocalDate.of(2013, 4, 30), "", "3 месяца обучения мобильным IN сетям (Берлин)"));
         Company alcatel = new Company("Alcatel",
                 new URL("http://www.alcatel.ru/"),
-                new Period(LocalDate.of(1997, 9, 1), LocalDate.of(1998, 3, 30),"", "6 месяцев обучения цифровым телефонным сетям (Москва)"));
+                new Period(LocalDate.of(1997, 9, 1), LocalDate.of(1998, 3, 30), "", "6 месяцев обучения цифровым телефонным сетям (Москва)"));
+        Company itmo = new Company("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
+                new URL("http://www.ifmo.ru/"),
+                new Period(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 30), "Аспирантура", "программист С, С++"),
+                new Period(LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 30), "Инженер", "программист Fortran, C"));
+
         List<Company> info4 = new ArrayList<>();
         info4.add(coursera);
         info4.add(luxoft);
         info4.add(siemens);
         info4.add(alcatel);
+        info4.add(itmo);
         CompanySection education = new CompanySection(info4);
         r.addSectionContent(EDUCATION, education);
-
+        return r;
 
     }
 }

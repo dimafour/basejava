@@ -81,7 +81,7 @@ public class Resume implements Comparable<Resume> {
             sb.append(type);
             sb.append(": ");
             sb.append(sections.get(type));
-            sb.append("\n");
+            sb.append("\n\n");
         }
         return sb.toString();
     }
