@@ -43,6 +43,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             if (file.createNewFile()) {
                 doWrite(r, file);
+            } else {
+                throw new StorageException("Error creating file ", r.getUuid());
             }
         } catch (IOException e) {
             throw new StorageException("Error saving ", r.getUuid(), e);
@@ -75,27 +77,37 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> doGetAll() {
         List<Resume> list = new ArrayList<>();
         File[] files = directory.listFiles();
-        Objects.requireNonNull(files);
-        for (File file : files) {
-            list.add(doGet(file));
+        if (files != null) {
+            for (File file : files) {
+                list.add(doGet(file));
+            }
+            return list;
+        } else {
+            throw new StorageException("Error accessing directory files ", null);
         }
-        return list;
     }
 
     @Override
     public void clear() {
         File[] files = directory.listFiles();
-        Objects.requireNonNull(files);
-        for (File file : files) {
-            file.delete();
+        if (files != null) {
+            for (File file : files) {
+                doDelete(file);
+            }
+        } else {
+            throw new StorageException("Error accessing directory files ", null);
         }
     }
+
 
     @Override
     public int size() {
         String[] list = directory.list();
-        Objects.requireNonNull(list);
-        return list.length;
+        if (list != null) {
+            return list.length;
+        } else {
+            throw new StorageException("Error accessing directory files ", null);
+        }
     }
 
     protected abstract void doWrite(Resume r, File file) throws IOException;
