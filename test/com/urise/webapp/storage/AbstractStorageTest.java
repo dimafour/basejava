@@ -7,6 +7,7 @@ import com.urise.webapp.model.Resume;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,6 +17,8 @@ import static com.urise.webapp.model.ResumeTestData.createResume;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
+
+    protected static final File STORAGE_DIR = new File("C:\\Users\\dimaf\\IdeaProjects\\basejava\\src\\com\\urise\\webapp\\storage\\Saved");
     protected final Storage storage;
     protected final List<Resume> expectedList = new ArrayList<>();
     protected final Resume[] expectedArrayForMapResumeStorage = new Resume[]{RESUME1, RESUME2, RESUME3};
