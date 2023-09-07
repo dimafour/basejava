@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = new File("C:\\Users\\dimaf\\IdeaProjects\\basejava\\src\\com\\urise\\webapp\\storage\\Saved");
+
     protected final Storage storage;
     protected final List<Resume> expectedList = new ArrayList<>();
     protected final Resume[] expectedArrayForMapResumeStorage = new Resume[]{RESUME1, RESUME2, RESUME3};
