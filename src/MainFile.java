@@ -4,8 +4,6 @@ import java.util.ArrayList;
 public class MainFile {
     static StringBuilder sb = new StringBuilder();
 
-    public static ArrayList<String> allFilesList = new ArrayList<>();
-
     public static void main(String[] args) {
         printFiles(new File("C:\\Projects\\basejava\\src"));
 //        System.out.println(allFilesList);

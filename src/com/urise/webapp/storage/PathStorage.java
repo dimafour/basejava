@@ -2,6 +2,8 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.serializer.ObjectSerializer;
+import com.urise.webapp.storage.serializer.Serializer;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -12,12 +14,14 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
 
     private final Path directory;
+    private final Serializer pathSerializer;
 
-    protected AbstractPathStorage(String dir) {
+    protected PathStorage(String dir) {
         directory = Paths.get(dir);
+        pathSerializer  = new ObjectSerializer();
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory)) {
             throw new IllegalArgumentException(dir + " is not directory");
@@ -35,7 +39,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Resume r, Path path) {
         try {
-            doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
+            pathSerializer.doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Update error ", r.getUuid(), e);
         }
@@ -45,7 +49,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     protected void doSave(Resume r, Path path) {
         try {
             Files.createFile(path);
-            doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
+            pathSerializer.doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Error saving ", r.getUuid(), e);
         }
@@ -54,7 +58,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path path) {
         try {
-            return doRead(new BufferedInputStream(Files.newInputStream(path)));
+            return pathSerializer.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Cant get Path", path.toString(), e);
         }
@@ -102,8 +106,4 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
             throw new StorageException("Size is ", null, e);
         }
     }
-
-    protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
-
-    protected abstract Resume doRead(InputStream is) throws IOException;
 }
