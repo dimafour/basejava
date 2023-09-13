@@ -4,7 +4,6 @@ import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.io.*;
-import java.nio.file.Path;
 
 public class ObjectSerializer implements Serializer {
 
@@ -13,7 +12,6 @@ public class ObjectSerializer implements Serializer {
         try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
             oos.writeObject(r);
         }
-
     }
 
     @Override

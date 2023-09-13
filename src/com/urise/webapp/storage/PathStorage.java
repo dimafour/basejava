@@ -21,7 +21,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     protected PathStorage(String dir) {
         directory = Paths.get(dir);
-        pathSerializer  = new ObjectSerializer();
+        pathSerializer = new ObjectSerializer();
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory)) {
             throw new IllegalArgumentException(dir + " is not directory");
@@ -33,7 +33,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return Path.of(directory.toString(), uuid);
+        return directory.resolve(uuid);
     }
 
     @Override
@@ -49,10 +49,10 @@ public class PathStorage extends AbstractStorage<Path> {
     protected void doSave(Resume r, Path path) {
         try {
             Files.createFile(path);
-            pathSerializer.doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Error saving ", r.getUuid(), e);
         }
+        doUpdate(r, path);
     }
 
     @Override
@@ -81,27 +81,23 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doGetAll() {
-        try (Stream<Path> stream = Files.list(directory)) {
-            return stream.map(this::doGet).sorted().collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new StorageException("Error accessing directory Paths ", null);
-        }
+        return getPathStream().map(this::doGet).sorted().collect(Collectors.toList());
     }
 
     @Override
     public void clear() {
-        try (Stream<Path> stream = Files.list(directory)) {
-            stream.forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error ", null, e);
-        }
+        getPathStream().forEach(this::doDelete);
     }
 
 
     @Override
     public int size() {
-        try (Stream<Path> stream = Files.list(directory)) {
-            return (int) stream.count();
+        return (int) getPathStream().count();
+    }
+
+    private Stream<Path> getPathStream() {
+        try {
+            return Files.list(directory);
         } catch (IOException e) {
             throw new StorageException("Size is ", null, e);
         }

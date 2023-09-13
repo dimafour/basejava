@@ -1,22 +1,27 @@
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
 
 public class MainFile {
     static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) {
-        printFiles(new File("C:\\Projects\\basejava\\src"));
-//        System.out.println(allFilesList);
+        try {
+            File file = new File("C:\\Projects\\basejava\\src");
+            printFiles(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    public static void printFiles(File file) {
+    public static void printFiles(File file) throws IOException {
         String[] list = file.list();
         if (list != null) {
             for (String name : list) {
-                File element = new File(file.getAbsolutePath(), name);
+                File element = new File(file.getCanonicalPath(), name);
                 if (element.isDirectory()) {
                     System.out.print(sb.append("  "));
-                    System.out.println(element + ": " + sb.append("  "));
+                    System.out.println(element.getName() + ": " + sb.append("  "));
                     printFiles(element);
                 } else {
                     System.out.println(sb + name);

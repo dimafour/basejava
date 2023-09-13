@@ -45,14 +45,11 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected void doSave(Resume r, File file) {
         try {
-            if (file.createNewFile()) {
-                fileSerializer.doWrite(r, new BufferedOutputStream(new FileOutputStream(file)));
-            } else {
-                throw new StorageException("Error creating file ", r.getUuid());
-            }
+            file.createNewFile();
         } catch (IOException e) {
             throw new StorageException("Error saving ", r.getUuid(), e);
         }
+        doUpdate(r, file);
     }
 
     @Override
@@ -80,38 +77,30 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> doGetAll() {
         List<Resume> list = new ArrayList<>();
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                list.add(doGet(file));
-            }
-            return list;
-        } else {
-            throw new StorageException("Error accessing directory files ", null);
+        for (File file : getFilesList()) {
+            list.add(doGet(file));
         }
+        return list;
     }
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                doDelete(file);
-            }
-        } else {
-            throw new StorageException("Error accessing directory files ", null);
+        for (File file : getFilesList()) {
+            doDelete(file);
         }
     }
 
-
     @Override
     public int size() {
-        String[] list = directory.list();
-        if (list != null) {
-            return list.length;
-        } else {
+        return getFilesList().length;
+    }
+
+    private File[] getFilesList() {
+        File[] list = directory.listFiles();
+        if (list == null) {
             throw new StorageException("Error accessing directory files ", null);
         }
+        return list;
     }
 
 }
