@@ -2,11 +2,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class MainFile {
-    static StringBuilder sb = new StringBuilder();
+    static String space = "    ";
+    static int counter;
 
     public static void main(String[] args) {
         try {
-            File file = new File("C:\\Projects\\basejava\\src");
+            File file = new File("./src");
             printFiles(file);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -20,14 +21,13 @@ public class MainFile {
             for (String name : list) {
                 File element = new File(file.getCanonicalPath(), name);
                 if (element.isDirectory()) {
-                    System.out.print(sb.append("  "));
-                    System.out.println(element.getName() + ": " + sb.append("  "));
+                    System.out.println(space.repeat(counter++) + element.getName() + ": ");
                     printFiles(element);
                 } else {
-                    System.out.println(sb + name);
+                    System.out.println(space.repeat(counter) + name);
                 }
             }
         }
-        sb.delete(0, sb.length());
+        counter--;
     }
 }
