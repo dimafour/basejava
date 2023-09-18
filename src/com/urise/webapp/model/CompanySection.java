@@ -7,7 +7,9 @@ import java.util.Objects;
 public class CompanySection extends Section {
     @Serial
     private static final long serialVersionUID = 1L;
-    private final List<Company> companyList;
+    private List<Company> companyList;
+
+    public CompanySection() {}
 
     public CompanySection(List<Company> companyList) {
         this.companyList = companyList;

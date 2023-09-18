@@ -1,19 +1,30 @@
 package com.urise.webapp.model;
 
+import com.urise.webapp.util.LocalDateAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Period implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private final String description;
-    private final LocalDate startDate;
+    private String description;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    private LocalDate startDate;
 
-    private final String title;
-    private final LocalDate endDate;
+    private String title;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    private LocalDate endDate;
+
+    public Period() {
+    }
 
     public Period(LocalDate startDate, LocalDate endDate, String title, String description) {
         this.startDate = startDate;
@@ -42,7 +53,7 @@ public class Period implements Serializable {
     public String toString() {
         return "\n" + title + " * " +
                 description + "\n" +
-                startDate + " - " + endDate ;
+                startDate + " - " + endDate;
     }
 
     @Override

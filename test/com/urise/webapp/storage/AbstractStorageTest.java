@@ -7,7 +7,6 @@ import com.urise.webapp.model.Resume;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -137,7 +136,12 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume r = new Resume(UUID3, "default");
+        Resume r;
+        try {
+            r = createResume(UUID3, "Peter Petrov");
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
         storage.update(r);
         assertEquals(r, storage.get(UUID3));
     }

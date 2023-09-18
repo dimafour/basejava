@@ -2,7 +2,6 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.serializer.ObjectSerializer;
 import com.urise.webapp.storage.serializer.Serializer;
 
 import java.io.*;
@@ -19,9 +18,9 @@ public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
     private final Serializer pathSerializer;
 
-    protected PathStorage(String dir) {
+    protected PathStorage(String dir, Serializer s) {
         directory = Paths.get(dir);
-        pathSerializer = new ObjectSerializer();
+        pathSerializer = s;
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory)) {
             throw new IllegalArgumentException(dir + " is not directory");
