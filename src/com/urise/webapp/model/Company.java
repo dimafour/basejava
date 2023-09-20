@@ -2,6 +2,7 @@ package com.urise.webapp.model;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.net.URL;
@@ -17,6 +18,7 @@ public class Company implements Serializable {
     private String name;
     private URL url;
     private List<Period> periods;
+
     public Company() {
     }
 
@@ -25,6 +27,16 @@ public class Company implements Serializable {
         this.url = url;
         this.periods = new ArrayList<>();
         Collections.addAll(this.periods, periods);
+    }
+
+    public Company(String name, URL url) {
+        this.name = name;
+        this.url = url;
+        this.periods = new ArrayList<>();
+    }
+
+    public void setPeriods(ArrayList<Period> periods) {
+        this.periods = periods;
     }
 
     public String getName() {
