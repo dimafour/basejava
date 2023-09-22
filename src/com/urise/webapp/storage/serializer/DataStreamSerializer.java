@@ -57,42 +57,47 @@ public class DataStreamSerializer implements Serializer {
         }
     }
 
-    private void doWriteSpecificSection(Map.Entry<SectionType, Section> entries, DataOutputStream dos) throws IOException {
-        Section s = entries.getValue();
-        if (s instanceof ListSection ls) {
-            dos.writeInt(ls.getFields().size());
-            ls.getFields().forEach(str -> {
-                try {
-                    dos.writeUTF(str);
-                } catch (IOException e) {
-                    throw new RuntimeException("Writing error", e);
-                }
-            });
-        }
-        if (s instanceof TextSection ts) {
-            dos.writeUTF(ts.getText());
-        }
-        if (s instanceof CompanySection cs) {
-            dos.writeInt(cs.getCompanyList().size());
-            cs.getCompanyList().forEach(company -> {
-                try {
-                    dos.writeUTF(company.getName());
-                    dos.writeUTF(company.getUrl().toString());
-                    dos.writeInt(company.getPeriods().size());
-                    company.getPeriods().forEach(period -> {
-                        try {
-                            doWriteLocalDate(dos, period.getStartDate());
-                            doWriteLocalDate(dos, period.getEndDate());
-                            dos.writeUTF(period.getTitle());
-                            dos.writeUTF(period.getDescription());
-                        } catch (IOException e) {
-                            throw new RuntimeException("Writing error", e);
-                        }
-                    });
-                } catch (IOException e) {
-                    throw new RuntimeException("Writing error", e);
-                }
-            });
+    private void doWriteSpecificSection(Map.Entry<SectionType, Section> entry, DataOutputStream dos) throws IOException {
+        switch (entry.getKey())
+        {
+            case ACHIEVEMENT, QUALIFICATIONS -> {
+                ListSection ls = (ListSection) entry.getValue();
+                dos.writeInt(ls.getFields().size());
+                ls.getFields().forEach(str -> {
+                    try {
+                        dos.writeUTF(str);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Writing error", e);
+                    }
+                });
+            }
+            case PERSONAL, OBJECTIVE -> {
+                TextSection ts = (TextSection) entry.getValue();
+                dos.writeUTF(ts.getText());
+            }
+            case EXPERIENCE, EDUCATION -> {
+                CompanySection cs = (CompanySection) entry.getValue();
+                dos.writeInt(cs.getCompanyList().size());
+                cs.getCompanyList().forEach(company -> {
+                    try {
+                        dos.writeUTF(company.getName());
+                        dos.writeUTF(company.getUrl().toString());
+                        dos.writeInt(company.getPeriods().size());
+                        company.getPeriods().forEach(period -> {
+                            try {
+                                doWriteLocalDate(dos, period.getStartDate());
+                                doWriteLocalDate(dos, period.getEndDate());
+                                dos.writeUTF(period.getTitle());
+                                dos.writeUTF(period.getDescription());
+                            } catch (IOException e) {
+                                throw new RuntimeException("Writing error", e);
+                            }
+                        });
+                    } catch (IOException e) {
+                        throw new RuntimeException("Writing error", e);
+                    }
+                });
+            }
         }
     }
 
