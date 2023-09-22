@@ -58,8 +58,7 @@ public class DataStreamSerializer implements Serializer {
     }
 
     private void doWriteSpecificSection(Map.Entry<SectionType, Section> entry, DataOutputStream dos) throws IOException {
-        switch (entry.getKey())
-        {
+        switch (entry.getKey()) {
             case ACHIEVEMENT, QUALIFICATIONS -> {
                 ListSection ls = (ListSection) entry.getValue();
                 dos.writeInt(ls.getFields().size());
@@ -102,20 +101,18 @@ public class DataStreamSerializer implements Serializer {
     }
 
     private void doReadSection(Resume r, DataInputStream dis) throws IOException {
-        String sectionName = dis.readUTF();
-        switch (sectionName) {
-            case "PERSONAL", "OBJECTIVE" ->
-                    r.addSectionContent(SectionType.valueOf(sectionName), new TextSection(dis.readUTF()));
-
-            case "ACHIEVEMENT", "QUALIFICATIONS" -> {
+        SectionType s = SectionType.valueOf(dis.readUTF());
+        switch (s) {
+            case PERSONAL, OBJECTIVE -> r.addSectionContent(s, new TextSection(dis.readUTF()));
+            case ACHIEVEMENT, QUALIFICATIONS -> {
                 int sectionSize = dis.readInt();
                 List<String> list = new ArrayList<>();
                 for (int i = 0; i < sectionSize; i++) {
                     list.add(dis.readUTF());
                 }
-                r.addSectionContent(SectionType.valueOf(sectionName), new ListSection(list));
+                r.addSectionContent(s, new ListSection(list));
             }
-            case "EXPERIENCE", "EDUCATION" -> {
+            case EXPERIENCE, EDUCATION -> {
                 int sectionSize = dis.readInt();
                 ArrayList<Company> companies = new ArrayList<>();
                 for (int i = 0; i < sectionSize; i++) {
@@ -128,7 +125,7 @@ public class DataStreamSerializer implements Serializer {
                     company.setPeriods(periods);
                     companies.add(company);
                 }
-                r.addSectionContent(SectionType.valueOf(sectionName), new CompanySection(companies));
+                r.addSectionContent(s, new CompanySection(companies));
             }
         }
     }
