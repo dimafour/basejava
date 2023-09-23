@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +17,14 @@ public class DataStreamSerializer implements Serializer {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
-            doWriteContacts(r, dos);
-            doWriteSections(r, dos);
+            doWriteCollection(dos, r.getContacts().entrySet(), entry -> {
+                dos.writeUTF(entry.getKey().name());
+                dos.writeUTF(entry.getValue());
+            });
+            doWriteCollection(dos, r.getSections().entrySet(), entry -> {
+                dos.writeUTF(entry.getKey().name());
+                doWriteSection(entry, dos);
+            });
         } catch (Exception e) {
             throw new IOException(e);
         }
@@ -39,36 +46,13 @@ public class DataStreamSerializer implements Serializer {
         }
     }
 
-    private void doWriteContacts(Resume r, DataOutputStream dos) throws IOException {
-        Map<ContactType, String> contacts = r.getContacts();
-        dos.writeInt(contacts.size());
-        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-            dos.writeUTF(entry.getKey().name());
-            dos.writeUTF(entry.getValue());
-        }
-    }
 
-    private void doWriteSections(Resume r, DataOutputStream dos) throws IOException {
-        Map<SectionType, Section> sections = r.getSections();
-        dos.writeInt(sections.size());
-        for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
-            dos.writeUTF(entry.getKey().name());
-            doWriteSpecificSection(entry, dos);
-        }
-    }
-
-    private void doWriteSpecificSection(Map.Entry<SectionType, Section> entry, DataOutputStream dos) throws IOException {
-        switch (entry.getKey()) {
+    private void doWriteSection(Map.Entry<SectionType, Section> entry, DataOutputStream dos) throws IOException {
+        SectionType key = entry.getKey();
+        switch (key) {
             case ACHIEVEMENT, QUALIFICATIONS -> {
                 ListSection ls = (ListSection) entry.getValue();
-                dos.writeInt(ls.getFields().size());
-                ls.getFields().forEach(str -> {
-                    try {
-                        dos.writeUTF(str);
-                    } catch (IOException e) {
-                        throw new RuntimeException("Writing error", e);
-                    }
-                });
+                doWriteCollection(dos, ls.getFields(), dos::writeUTF);
             }
             case PERSONAL, OBJECTIVE -> {
                 TextSection ts = (TextSection) entry.getValue();
@@ -76,25 +60,15 @@ public class DataStreamSerializer implements Serializer {
             }
             case EXPERIENCE, EDUCATION -> {
                 CompanySection cs = (CompanySection) entry.getValue();
-                dos.writeInt(cs.getCompanyList().size());
-                cs.getCompanyList().forEach(company -> {
-                    try {
-                        dos.writeUTF(company.getName());
-                        dos.writeUTF(company.getUrl().toString());
-                        dos.writeInt(company.getPeriods().size());
-                        company.getPeriods().forEach(period -> {
-                            try {
-                                doWriteLocalDate(dos, period.getStartDate());
-                                doWriteLocalDate(dos, period.getEndDate());
-                                dos.writeUTF(period.getTitle());
-                                dos.writeUTF(period.getDescription());
-                            } catch (IOException e) {
-                                throw new RuntimeException("Writing error", e);
-                            }
-                        });
-                    } catch (IOException e) {
-                        throw new RuntimeException("Writing error", e);
-                    }
+                doWriteCollection(dos, cs.getCompanyList(), company -> {
+                    dos.writeUTF(company.getName());
+                    dos.writeUTF(company.getUrl().toString());
+                    doWriteCollection(dos, company.getPeriods(), period -> {
+                        doWriteLocalDate(dos, period.getStartDate());
+                        doWriteLocalDate(dos, period.getEndDate());
+                        dos.writeUTF(period.getTitle());
+                        dos.writeUTF(period.getDescription());
+                    });
                 });
             }
         }
@@ -118,7 +92,7 @@ public class DataStreamSerializer implements Serializer {
                 for (int i = 0; i < sectionSize; i++) {
                     Company company = new Company(dis.readUTF(), new URL(dis.readUTF()));
                     int periodsSize = dis.readInt();
-                    ArrayList<Period> periods = new ArrayList<>();
+                    List<Period> periods = new ArrayList<>();
                     for (int j = 0; j < periodsSize; j++) {
                         periods.add(new Period(doReadLocalDate(dis), doReadLocalDate(dis), dis.readUTF(), dis.readUTF()));
                     }
@@ -140,4 +114,14 @@ public class DataStreamSerializer implements Serializer {
         return LocalDate.of(dis.readInt(), dis.readInt(), dis.readInt());
     }
 
+    private interface writeWithException<E> {
+        void write(E item) throws IOException;
+    }
+
+    private <E> void doWriteCollection(DataOutputStream dos, Collection<E> collection, writeWithException<E> wwe) throws IOException {
+        dos.writeInt(collection.size());
+        for (E item : collection) {
+            wwe.write(item);
+        }
+    }
 }

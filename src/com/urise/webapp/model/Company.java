@@ -35,7 +35,7 @@ public class Company implements Serializable {
         this.periods = new ArrayList<>();
     }
 
-    public void setPeriods(ArrayList<Period> periods) {
+    public void setPeriods(List<Period> periods) {
         this.periods = periods;
     }
 
