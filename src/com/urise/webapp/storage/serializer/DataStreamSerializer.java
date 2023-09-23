@@ -5,10 +5,7 @@ import com.urise.webapp.model.*;
 import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataStreamSerializer implements Serializer {
 
@@ -34,14 +31,14 @@ public class DataStreamSerializer implements Serializer {
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
-            int contactsSize = dis.readInt();
-            for (int i = 0; i < contactsSize; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-            int sectionsSize = dis.readInt();
-            for (int i = 0; i < sectionsSize; i++) {
-                doReadSection(resume, dis);
-            }
+            doReadCollection(dis, () -> {
+                ContactType ct = ContactType.valueOf(dis.readUTF());
+                resume.addContact(ct, dis.readUTF());
+            });
+            doReadCollection(dis, () -> {
+                SectionType st = SectionType.valueOf(dis.readUTF());
+                resume.addSectionContent(st, doReadSection(st, dis));
+            });
             return resume;
         }
     }
@@ -74,33 +71,30 @@ public class DataStreamSerializer implements Serializer {
         }
     }
 
-    private void doReadSection(Resume r, DataInputStream dis) throws IOException {
-        SectionType s = SectionType.valueOf(dis.readUTF());
-        switch (s) {
-            case PERSONAL, OBJECTIVE -> r.addSectionContent(s, new TextSection(dis.readUTF()));
+    private Section doReadSection(SectionType st, DataInputStream dis) throws IOException {
+        switch (st) {
+            case PERSONAL, OBJECTIVE -> {
+                return new TextSection(dis.readUTF());
+            }
             case ACHIEVEMENT, QUALIFICATIONS -> {
-                int sectionSize = dis.readInt();
                 List<String> list = new ArrayList<>();
-                for (int i = 0; i < sectionSize; i++) {
-                    list.add(dis.readUTF());
-                }
-                r.addSectionContent(s, new ListSection(list));
+                doReadCollection(dis, () -> list.add(dis.readUTF()));
+                return new ListSection(list);
             }
             case EXPERIENCE, EDUCATION -> {
-                int sectionSize = dis.readInt();
-                ArrayList<Company> companies = new ArrayList<>();
-                for (int i = 0; i < sectionSize; i++) {
-                    Company company = new Company(dis.readUTF(), new URL(dis.readUTF()));
-                    int periodsSize = dis.readInt();
-                    List<Period> periods = new ArrayList<>();
-                    for (int j = 0; j < periodsSize; j++) {
-                        periods.add(new Period(doReadLocalDate(dis), doReadLocalDate(dis), dis.readUTF(), dis.readUTF()));
-                    }
-                    company.setPeriods(periods);
-                    companies.add(company);
-                }
-                r.addSectionContent(s, new CompanySection(companies));
+                List<Company> companies = new ArrayList<>();
+                doReadCollection(dis, () ->
+                        {
+                            Company company = new Company(dis.readUTF(), new URL(dis.readUTF()));
+                            List<Period> periods = new ArrayList<>();
+                            doReadCollection(dis, () -> periods.add(new Period(doReadLocalDate(dis), doReadLocalDate(dis), dis.readUTF(), dis.readUTF())));
+                            company.setPeriods(periods);
+                            companies.add(company);
+                        }
+                );
+                return new CompanySection(companies);
             }
+            default -> throw new IOException("Reading Error");
         }
     }
 
@@ -114,14 +108,25 @@ public class DataStreamSerializer implements Serializer {
         return LocalDate.of(dis.readInt(), dis.readInt(), dis.readInt());
     }
 
-    private interface writeWithException<E> {
+    private interface WriteWithException<E> {
         void write(E item) throws IOException;
     }
 
-    private <E> void doWriteCollection(DataOutputStream dos, Collection<E> collection, writeWithException<E> wwe) throws IOException {
+    private interface ElementAdder {
+        void add() throws IOException;
+    }
+
+    private <E> void doWriteCollection(DataOutputStream dos, Collection<E> collection, WriteWithException<E> wwe) throws IOException {
         dos.writeInt(collection.size());
         for (E item : collection) {
             wwe.write(item);
+        }
+    }
+
+    private void doReadCollection(DataInputStream dis, ElementAdder ea) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            ea.add();
         }
     }
 }

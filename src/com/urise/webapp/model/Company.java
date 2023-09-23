@@ -32,7 +32,6 @@ public class Company implements Serializable {
     public Company(String name, URL url) {
         this.name = name;
         this.url = url;
-        this.periods = new ArrayList<>();
     }
 
     public void setPeriods(List<Period> periods) {
