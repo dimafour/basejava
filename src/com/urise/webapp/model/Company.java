@@ -29,12 +29,9 @@ public class Company implements Serializable {
         Collections.addAll(this.periods, periods);
     }
 
-    public Company(String name, URL url) {
+    public Company(String name, URL url, List<Period> periods) {
         this.name = name;
         this.url = url;
-    }
-
-    public void setPeriods(List<Period> periods) {
         this.periods = periods;
     }
 

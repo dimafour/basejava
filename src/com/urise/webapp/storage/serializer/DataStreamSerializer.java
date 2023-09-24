@@ -77,22 +77,13 @@ public class DataStreamSerializer implements Serializer {
                 return new TextSection(dis.readUTF());
             }
             case ACHIEVEMENT, QUALIFICATIONS -> {
-                List<String> list = new ArrayList<>();
-                doReadCollection(dis, () -> list.add(dis.readUTF()));
-                return new ListSection(list);
+                return new ListSection((createList(dis, dis::readUTF)));
             }
             case EXPERIENCE, EDUCATION -> {
-                List<Company> companies = new ArrayList<>();
-                doReadCollection(dis, () ->
-                        {
-                            Company company = new Company(dis.readUTF(), new URL(dis.readUTF()));
-                            List<Period> periods = new ArrayList<>();
-                            doReadCollection(dis, () -> periods.add(new Period(doReadLocalDate(dis), doReadLocalDate(dis), dis.readUTF(), dis.readUTF())));
-                            company.setPeriods(periods);
-                            companies.add(company);
-                        }
-                );
-                return new CompanySection(companies);
+                return new CompanySection(createList(dis, () ->
+                        new Company(dis.readUTF(), new URL(dis.readUTF()),
+                                createList(dis, () ->
+                                        new Period(doReadLocalDate(dis), doReadLocalDate(dis), dis.readUTF(), dis.readUTF())))));
             }
             default -> throw new IOException("Reading Error");
         }
@@ -116,6 +107,10 @@ public class DataStreamSerializer implements Serializer {
         void add() throws IOException;
     }
 
+    private interface ElementCreator<E> {
+        E create() throws IOException;
+    }
+
     private <E> void doWriteCollection(DataOutputStream dos, Collection<E> collection, WriteWithException<E> wwe) throws IOException {
         dos.writeInt(collection.size());
         for (E item : collection) {
@@ -129,4 +124,12 @@ public class DataStreamSerializer implements Serializer {
             ea.add();
         }
     }
+
+    private <E> List<E> createList(DataInputStream dis, ElementCreator<E> ec) throws IOException {
+        List<E> list = new ArrayList<>();
+        doReadCollection(dis, () -> list.add(ec.create()));
+        return list;
+    }
+
+
 }
