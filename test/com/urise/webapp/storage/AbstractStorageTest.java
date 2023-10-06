@@ -16,6 +16,8 @@ import static com.urise.webapp.model.ResumeTestData.createResume;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
+    protected static final String STORAGE_DIR = "C:\\Users\\dimaf\\IdeaProjects\\basejava\\src\\com\\urise\\webapp\\storage\\Saved";
+
     protected final Storage storage;
     protected final List<Resume> expectedList = new ArrayList<>();
     protected final Resume[] expectedArrayForMapResumeStorage = new Resume[]{RESUME1, RESUME2, RESUME3};
@@ -134,7 +136,12 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume r = new Resume(UUID3, "default");
+        Resume r;
+        try {
+            r = createResume(UUID3, "Peter Petrov");
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
         storage.update(r);
         assertEquals(r, storage.get(UUID3));
     }

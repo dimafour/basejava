@@ -1,9 +1,19 @@
 package com.urise.webapp.model;
 
+import java.io.Serial;
 import java.util.Objects;
 
 public class TextSection extends Section {
-    private final String text;
+    @Serial
+    private static final long serialVersionUID = 1L;
+    private String text;
+
+    public TextSection() {
+    }
+
+    public String getText() {
+        return text;
+    }
 
     public TextSection(String text) {
         this.text = text;

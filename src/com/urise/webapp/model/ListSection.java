@@ -1,10 +1,14 @@
 package com.urise.webapp.model;
 
+import java.io.Serial;
 import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends Section {
-    private final List<String> fields;
+    @Serial
+    private static final long serialVersionUID = 1L;
+    private List<String> fields;
+    public ListSection() {}
     public ListSection(List<String> field) {
         this.fields = field;
     }
