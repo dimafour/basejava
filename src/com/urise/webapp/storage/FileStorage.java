@@ -14,8 +14,8 @@ public class FileStorage extends AbstractStorage<File> {
     private final File directory;
     private final Serializer fileSerializer;
 
-    protected FileStorage(String dir, Serializer s) {
-        this.directory = new File(dir);
+    protected FileStorage(File file, Serializer s) {
+        this.directory = file;
         this.fileSerializer = s;
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {

@@ -10,7 +10,7 @@ public class MainDb {
     }
 
     private void testDatabase() {
-        String url = "jdbc:postgresql://localhost:5432/contact_db";
+        String url = "jdbc:postgresql://localhost:5432/contacts";
         String login = "postgres";
         String password = "postgres";
         try (Connection con = DriverManager.getConnection(url, login, password);
