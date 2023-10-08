@@ -15,7 +15,7 @@ public class MainDb {
         String password = "postgres";
         try (Connection con = DriverManager.getConnection(url, login, password);
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM JC_CONTACT")) {
+        ResultSet rs = stmt.executeQuery("SELECT * FROM resume")) {
             while (rs.next()) {
                 String str = rs.getString("contact_id") + ":" + rs.getString(2);
                 System.out.println("Contact:" + str);
