@@ -19,13 +19,13 @@ public class ResumeTestData {
 
     public static Resume createResume(String uuid, String fullName) throws MalformedURLException {
         Resume r = new Resume(uuid, fullName);
-//        r.addContact(MOBILE, "+7(921) 855-0482");
-//        r.addContact(LINKEDIN, "https://www.linkedin.com/in/gkislin");
-//        r.addContact(GITHUB, "https://github.com/gkislin");
-//        r.addContact(HOMEPAGE, "http://gkislin.ru/");
-//        r.addContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
-//        r.addContact(SKYPE, "grigory.kislin");
-//        r.addContact(MAIL, "gkislin@yandex.ru");
+        r.addContact(MOBILE, "+7(921) 855-0482");
+        r.addContact(LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        r.addContact(GITHUB, "https://github.com/gkislin");
+        r.addContact(HOMEPAGE, "http://gkislin.ru/");
+        r.addContact(STACKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
+        r.addContact(SKYPE, "grigory.kislin");
+        r.addContact(MAIL, "gkislin@yandex.ru");
 //
 //        TextSection objective = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
 //        TextSection personal = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
