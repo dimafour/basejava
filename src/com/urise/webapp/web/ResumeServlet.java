@@ -25,19 +25,8 @@ public class ResumeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Writer writer = response.getWriter();
-        List<Resume> resumes = storage.getAllSorted();
-        writer.write("<style> table, th, td {border:1px solid black;} </style> " +
-                "<table> " +
-                "<tr> " +
-                "<th>UUID</th> " +
-                "<th>Full Name</th> " +
-                "</tr>");
-        for (Resume r : resumes) {
-            writer.write("<tr> <td>" + r.getUuid() + "</td>");
-            writer.write("<td>" + r.getFullName() + "</td> </tr>");
-        }
-        writer.write("</table>");
+        request.setAttribute("resumes", storage.getAllSorted());
+        request.getRequestDispatcher("/WEB-INF/jsp/resumes.jsp").forward(request, response);
     }
 
     @Override
