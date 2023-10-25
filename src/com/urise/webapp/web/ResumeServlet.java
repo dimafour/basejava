@@ -1,8 +1,6 @@
 package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
-import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.SqlStorage;
 import com.urise.webapp.storage.Storage;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.http.HttpServlet;
@@ -11,8 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
