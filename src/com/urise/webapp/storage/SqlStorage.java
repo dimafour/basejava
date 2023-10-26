@@ -31,7 +31,11 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume r) {
         sqlHelper.transactionalExecute(c -> {
-            processResume(c, "INSERT INTO resume (uuid, full_name) VALUES(?, ?)", r);
+            try (PreparedStatement ps = c.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)")) {
+                ps.setString(1, r.getUuid());
+                ps.setString(2, r.getFullName());
+                ps.execute();
+            }
             insertContacts(c, r);
             insertSections(c, r);
             LOG.info("Save " + r);
@@ -114,7 +118,13 @@ public class SqlStorage implements Storage {
     @Override
     public void update(Resume r) {
         sqlHelper.transactionalExecute(c -> {
-            processResume(c, "UPDATE resume SET full_name=? WHERE uuid = ?", r);
+            try (PreparedStatement ps = c.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
+                ps.setString(1, r.getFullName());
+                ps.setString(2, r.getUuid());
+                if (ps.executeUpdate() != 1) {
+                    throw new NotExistStorageException(r.getUuid());
+                }
+            }
             deleteContacts(c, r);
             insertContacts(c, r);
             deleteSections(c, r);

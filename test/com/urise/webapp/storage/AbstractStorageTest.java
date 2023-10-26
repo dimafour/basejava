@@ -140,7 +140,7 @@ public abstract class AbstractStorageTest {
     public void update() {
         Resume r;
         try {
-            r = createResume(UUID3, "Peter Petrov");
+            r = createResume(UUID3, "Peter Petrovich");
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
