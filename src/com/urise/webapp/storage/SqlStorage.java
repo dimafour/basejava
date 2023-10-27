@@ -133,14 +133,6 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private void processResume(Connection c, String query, Resume r) throws SQLException {
-        try (PreparedStatement ps = c.prepareStatement(query)) {
-            ps.setString(1, r.getUuid());
-            ps.setString(2, r.getFullName());
-            ps.execute();
-        }
-    }
-
     private void insertContacts(Connection c, Resume r) throws SQLException {
         try (PreparedStatement ps = c.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES(?, ?, ?)")) {
             for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {

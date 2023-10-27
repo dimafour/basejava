@@ -1,5 +1,5 @@
 <%@ page import="com.urise.webapp.model.ContactType" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
@@ -11,22 +11,35 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
-    <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
+    <form method="post" id="form" onsubmit="validateForm()" action="resume" enctype="application/x-www-form-urlencoded">
+        <script>
+            function validateForm() {
+                if (document.getElementById("name").value.trim() === "") {
+                    alert("Имя не может быть пустым. Изменения не будут сохранены");
+                }
+            }
+        </script>
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt><h3>Имя:</h3></dt>
-            <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"></dd>
+            <dd>
+                <label>
+                    <input type="text" name="fullName" id="name" size=50 value="${resume.fullName}">
+                </label>
+            </dd>
         </dl>
         <h3>Контакты:</h3>
         <c:forEach var="type" items="<%=ContactType.values()%>">
             <dl>
                 <dt><h4>${type.title}</h4></dt>
                 <dd>
-                    <input type="text" name="${type.name()}" size=50 value="${resume.contacts.get(type)}">
+                    <label>
+                        <input type="text" name="${type.name()}" size=50 value="${resume.contacts.get(type)}">
+                    </label>
                 </dd>
             </dl>
         </c:forEach>
-        <button type="submit" onclick="history.back()">Сохранить</button>
+        <button type="submit" id="submit" onclick="history.back()">Сохранить</button>
         <button type="reset" onclick="history.back()">Отмена</button>
     </form>
 </section>
