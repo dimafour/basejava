@@ -11,13 +11,21 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
-    <h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/edit.png" height="30" alt="edit"></a></h2>
+    <h2>${resume.fullName}&nbsp;<a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/edit.png" height="30"
+                                                                                      alt="edit"></a></h2>
     <p>
         <c:forEach var="contactEntry" items="${resume.contacts}">
             <jsp:useBean id="contactEntry"
                          type="java.util.Map.Entry<com.urise.webapp.model.ContactType, java.lang.String>"/>
-            <b> <%=contactEntry.getKey()%> :</b>
-                    <%=HtmlHelper.toHtml(contactEntry.getKey(), contactEntry.getValue())%><br/>
+        <b><%=contactEntry.getKey()%> :</b>
+                <%=HtmlHelper.toHtml(contactEntry.getKey(), contactEntry.getValue())%><br/>
+        </c:forEach>
+
+        <c:forEach var="sectionEntry" items="${resume.sections}">
+                <jsp:useBean id="sectionEntry"
+                             type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.Section>"/>
+            <b><%=sectionEntry.getKey()%> :</b>
+                    <%=HtmlHelper.toHtml(sectionEntry.getKey(), sectionEntry.getValue())%><br/>
         </c:forEach>
     <p>
 </section>

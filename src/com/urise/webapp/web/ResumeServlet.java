@@ -2,8 +2,8 @@ package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.exception.StorageException;
+import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.http.HttpServlet;
@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -38,14 +40,16 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             }
-            case "view" -> {
+            case "clear" -> {
+                storage.clear();
+                response.sendRedirect("resume");
+                return;
+            }
+            case "view", "edit" -> {
                 r = storage.get(uuid);
             }
             case "add" -> {
                 r = Resume.TEMPLATE;
-            }
-            case "edit" -> {
-                r = storage.get(uuid);
             }
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
@@ -66,12 +70,26 @@ public class ResumeServlet extends HttpServlet {
             r = storage.get(uuid);
             r.setFullName(fullName);
         }
-        for (ContactType type : ContactType.values()) {
-            String value = request.getParameter(type.name());
+        for (ContactType ct : ContactType.values()) {
+            String value = request.getParameter(ct.name());
             if (value != null && !value.trim().isEmpty()) {
-                r.addContact(type, value);
+                r.addContact(ct, value);
             } else {
-                r.getContacts().remove(type);
+                r.getContacts().remove(ct);
+            }
+        }
+        for (SectionType st : SectionType.values()) {
+            String value = request.getParameter(st.getTitle());
+            if (value != null && !value.trim().isEmpty()) {
+                switch (st) {
+                    case PERSONAL, OBJECTIVE -> r.addSectionContent(st, new TextSection(value));
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                        r.addSectionContent(st, new ListSection(List.of(value.split("\r\n"))));
+                    }
+                    default -> throw new NotExistStorageException("Section not exists");
+                }
+            } else {
+                r.getSections().remove(st);
             }
         }
         try {

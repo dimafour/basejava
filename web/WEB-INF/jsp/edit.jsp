@@ -1,4 +1,6 @@
 <%@ page import="com.urise.webapp.model.ContactType" %>
+<%@ page import="com.urise.webapp.model.SectionType" %>
+<%@ page import="com.urise.webapp.util.HtmlHelper" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
@@ -29,12 +31,22 @@
             </dd>
         </dl>
         <h3>Контакты:</h3>
-        <c:forEach var="type" items="<%=ContactType.values()%>">
+        <c:forEach var="contactType" items="<%=ContactType.values()%>">
             <dl>
-                <dt><h4>${type.title}</h4></dt>
+                <dt><h4>${contactType.title}</h4></dt>
                 <dd>
                     <label>
-                        <input type="text" name="${type.name()}" size=50 value="${resume.contacts.get(type)}">
+                        <input type="text" name="${contactType.name()}" size=50 value="${resume.contacts.get(contactType)}">
+                    </label>
+                </dd>
+            </dl>
+        </c:forEach>
+        <c:forEach var="sectionType" items="<%=SectionType.values()%>">
+            <dl>
+                <dt><h4>${sectionType.title}</h4></dt>
+                <dd>
+                    <label>
+                        <textarea style="width: 1000px; height: 250px;" name="${sectionType.title}">${HtmlHelper.toHtmlTextArea(sectionType.name(), resume.sections.get(sectionType))} </textarea>
                     </label>
                 </dd>
             </dl>
