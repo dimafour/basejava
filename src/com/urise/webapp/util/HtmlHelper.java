@@ -35,13 +35,26 @@ public class HtmlHelper {
                 TextSection ts = (TextSection) content;
                 return ts.getText();
             }
-//            case EXPERIENCE, EDUCATION -> { }
+            case EDUCATION, EXPERIENCE -> {
+                CompanySection cs = (CompanySection) content;
+                cs.getCompanyList().forEach(field -> {
+                    sb.append("<br>").append(toLink(field.getName(), field.getUrl().toString())).append("<br>");
+                    field.getPeriods().forEach(period -> {
+                        sb.append(period.getStartDate()).append(" - ").append(period.getEndDate()).append("<br>");
+                        sb.append(period.getTitle()).append("<br>");
+                        sb.append(period.getDescription()).append("<br>");
+                    });
+                });
+                return sb.toString();
+            }
             default -> throw new IllegalArgumentException(st.name() + " is not a section");
         }
     }
+
     public static String toHtmlTextArea(SectionType st, Section content) {
         return HtmlHelper.toHtml(st, content).replaceAll("<br>", "\r\n").trim();
     }
+
     public static String toLink(String title, String link) {
         return "<a href='" + link + "'>" + title + "</a>";
     }

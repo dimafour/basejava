@@ -21,7 +21,7 @@
                 }
             }
         </script>
-        <input type="hidden" name="uuid" value="${resume.uuid}">
+        <input type="hidden" name="uuid" value="${resume.uuid}" required>
         <dl>
             <dt><h3>Имя:</h3></dt>
             <dd>
@@ -36,17 +36,47 @@
                 <dt><h4>${contactType.title}</h4></dt>
                 <dd>
                     <label>
-                        <input type="text" name="${contactType.name()}" size=50 value="${resume.contacts.get(contactType)}">
+                        <input type="text" name="${contactType.name()}" size=50
+                               value="${resume.contacts.get(contactType)}">
                     </label>
                 </dd>
             </dl>
         </c:forEach>
-        <c:forEach var="sectionType" items="<%=SectionType.values()%>">
+        <c:forEach var="sectionType" items="<%=SectionType.textListValues()%>">
             <dl>
                 <dt><h4>${sectionType.title}</h4></dt>
                 <dd>
                     <label>
-                        <textarea style="width: 1000px; height: 250px;" name="${sectionType.title}">${HtmlHelper.toHtmlTextArea(sectionType.name(), resume.sections.get(sectionType))} </textarea>
+                        <textarea style="width: 1000px; height: 250px;"
+                                  name="${sectionType.title}">${HtmlHelper.toHtmlTextArea(sectionType.name(), resume.sections.get(sectionType))} </textarea>
+                    </label>
+                </dd>
+            </dl>
+        </c:forEach>
+        <c:forEach var="sectionType" items="<%=SectionType.companyValues()%>">
+            <dl>
+                <dt><h4>${sectionType.title}</h4></dt>
+                <dd>
+                    <label>
+
+                        <c:forEach var="company" items="${(resume.sections.get(sectionType)).getCompanyList()}">
+                            <div class="box"> Организация: <textarea name="name">${company.name} </textarea>
+                                Ссылка: <textarea name="url">${company.url} </textarea> <br/>
+                                <h5>Периоды занятости:</h5><br/>
+                                <c:forEach var="period" items="${company.getPeriods()}">
+                                    Период: <input type="date" name="startDate" value="${period.getStartDate()}"> -
+                                    <input type="date" name="endDate" value="${period.getEndDate()}">
+                                    Должность:<textarea name="title">${period.getTitle()} </textarea>
+                                    Описание :<textarea name="description">${period.getDescription()} </textarea><br/>
+                                </c:forEach>
+                                Период: <input type="date" name="startDate"> -
+                                <input type="date" name="endDate" value="max">
+                                Должность:<textarea name="title"></textarea>
+                                Описание :<textarea name="description"></textarea><br/>
+                            </div>
+                        </c:forEach>
+                        <div class="box">Организация: <textarea name="name"> </textarea>
+                            Ссылка: <textarea name="url"> </textarea> <br/><br/></div>
                     </label>
                 </dd>
             </dl>

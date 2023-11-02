@@ -1,6 +1,8 @@
 package com.urise.webapp.model;
 
+import com.google.gson.annotations.JsonAdapter;
 import com.urise.webapp.util.LocalDateAdapter;
+import com.urise.webapp.util.LocalDateJsonAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -17,10 +19,12 @@ public class Period implements Serializable {
     private static final long serialVersionUID = 1L;
     private String description;
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @JsonAdapter(LocalDateJsonAdapter.class)
     private LocalDate startDate;
 
     private String title;
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @JsonAdapter(LocalDateJsonAdapter.class)
     private LocalDate endDate;
 
     public Period() {

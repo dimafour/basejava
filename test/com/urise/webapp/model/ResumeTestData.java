@@ -63,45 +63,45 @@ public class ResumeTestData {
         r.addSectionContent(OBJECTIVE, objective);
         r.addSectionContent(PERSONAL, personal);
         r.addSectionContent(ACHIEVEMENT, achievement);
-//
-//        Company jop = new Company("Java Online Projects",
-//                new URL("http://javaops.ru/"),
-//                new Period(LocalDate.of(2013, 10, 1), LocalDate.of(2023, 8, 30), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок."));
-//        Company wrike = new Company("Wrike",
-//                new URL("https://www.wrike.com/"),
-//                new Period(LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 30), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
-//        List<Company> info3 = new ArrayList<>();
-//        info3.add(jop);
-//        info3.add(wrike);
-//        CompanySection experience = new CompanySection(info3);
-//        r.addSectionContent(EXPERIENCE, experience);
-//
-//
-//        Company coursera = new Company("Coursera",
-//                new URL("https://www.coursera.org/learn/progfun1"),
-//                new Period(LocalDate.of(2013, 3, 1), LocalDate.of(2013, 5, 30), "", "'Functional Programming Principles in Scala' by Martin Odersky"));
-//        Company luxoft = new Company("Luxoft",
-//                new URL("http://www.luxoft-training.ru/training/catalog/course.html?ID=22366"),
-//                new Period(LocalDate.of(2011, 3, 1), LocalDate.of(2011, 4, 30), "", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'"));
-//        Company siemens = new Company("Siemens AG",
-//                new URL("http://www.siemens.ru/"),
-//                new Period(LocalDate.of(2005, 1, 1), LocalDate.of(2013, 4, 30), "", "3 месяца обучения мобильным IN сетям (Берлин)"));
-//        Company alcatel = new Company("Alcatel",
-//                new URL("http://www.alcatel.ru/"),
-//                new Period(LocalDate.of(1997, 9, 1), LocalDate.of(1998, 3, 30), "", "6 месяцев обучения цифровым телефонным сетям (Москва)"));
-//        Company itmo = new Company("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
-//                new URL("http://www.ifmo.ru/"),
-//                new Period(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 30), "Аспирантура", "программист С, С++"),
-//                new Period(LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 30), "Инженер", "программист Fortran, C"));
-//
-//        List<Company> info4 = new ArrayList<>();
-//        info4.add(coursera);
-//        info4.add(luxoft);
-//        info4.add(siemens);
-//        info4.add(alcatel);
-//        info4.add(itmo);
-//        CompanySection education = new CompanySection(info4);
-//        r.addSectionContent(EDUCATION, education);
+
+        Company jop = new Company("Java Online Projects",
+                new URL("http://javaops.ru/"),
+                new Period(LocalDate.of(2013, 10, 1), LocalDate.of(2023, 8, 30), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок."));
+        Company wrike = new Company("Wrike",
+                new URL("https://www.wrike.com/"),
+                new Period(LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 30), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
+        List<Company> info3 = new ArrayList<>();
+        info3.add(jop);
+        info3.add(wrike);
+        CompanySection experience = new CompanySection(info3);
+        r.addSectionContent(EXPERIENCE, experience);
+
+
+        Company coursera = new Company("Coursera",
+                new URL("https://www.coursera.org/learn/progfun1"),
+                new Period(LocalDate.of(2013, 3, 1), LocalDate.of(2013, 5, 30), "Повышение квалификации", "'Functional Programming Principles in Scala' by Martin Odersky"));
+        Company luxoft = new Company("Luxoft",
+                new URL("http://www.luxoft-training.ru/training/catalog/course.html?ID=22366"),
+                new Period(LocalDate.of(2011, 3, 1), LocalDate.of(2011, 4, 30), "Повышение квалификации", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'"));
+        Company siemens = new Company("Siemens AG",
+                new URL("http://www.siemens.ru/"),
+                new Period(LocalDate.of(2005, 1, 1), LocalDate.of(2013, 4, 30), "Повышение квалификации", "3 месяца обучения мобильным IN сетям (Берлин)"));
+        Company alcatel = new Company("Alcatel",
+                new URL("http://www.alcatel.ru/"),
+                new Period(LocalDate.of(1997, 9, 1), LocalDate.of(1998, 3, 30), "Повышение квалификации", "6 месяцев обучения цифровым телефонным сетям (Москва)"));
+        Company itmo = new Company("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
+                new URL("http://www.ifmo.ru/"),
+                new Period(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 30), "Аспирантура", "программист С, С++"),
+                new Period(LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 30), "Инженер", "программист Fortran, C"));
+
+        List<Company> info4 = new ArrayList<>();
+        info4.add(coursera);
+        info4.add(luxoft);
+        info4.add(siemens);
+        info4.add(alcatel);
+        info4.add(itmo);
+        CompanySection education = new CompanySection(info4);
+        r.addSectionContent(EDUCATION, education);
         return r;
 
     }

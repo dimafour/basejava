@@ -86,6 +86,9 @@ public class ResumeServlet extends HttpServlet {
                     case ACHIEVEMENT, QUALIFICATIONS -> {
                         r.addSectionContent(st, new ListSection(List.of(value.split("\r\n"))));
                     }
+                    case EDUCATION, EXPERIENCE -> {
+                        r.addSectionContent(st, new CompanySection());
+                    }
                     default -> throw new NotExistStorageException("Section not exists");
                 }
             } else {
