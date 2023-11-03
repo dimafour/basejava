@@ -48,7 +48,7 @@
                 <dd>
                     <label>
                         <textarea style="width: 1000px; height: 250px;"
-                                  name="${sectionType.title}">${HtmlHelper.toHtmlTextArea(sectionType.name(), resume.sections.get(sectionType))} </textarea>
+                                  name="${sectionType.name()}">${HtmlHelper.toHtmlTextArea(sectionType.name(), resume.sections.get(sectionType))} </textarea>
                     </label>
                 </dd>
             </dl>
@@ -58,25 +58,28 @@
                 <dt><h4>${sectionType.title}</h4></dt>
                 <dd>
                     <label>
-
                         <c:forEach var="company" items="${(resume.sections.get(sectionType)).getCompanyList()}">
-                            <div class="box"> Организация: <textarea name="name">${company.name} </textarea>
-                                Ссылка: <textarea name="url">${company.url} </textarea> <br/>
-                                <h5>Периоды занятости:</h5><br/>
-                                <c:forEach var="period" items="${company.getPeriods()}">
-                                    Период: <input type="date" name="startDate" value="${period.getStartDate()}"> -
-                                    <input type="date" name="endDate" value="${period.getEndDate()}">
-                                    Должность:<textarea name="title">${period.getTitle()} </textarea>
-                                    Описание :<textarea name="description">${period.getDescription()} </textarea><br/>
+                            <div class="box"> Организация: <input type="text" name="${sectionType.name()}"
+                                                                  value="${company.name}">
+                                Ссылка: <input type="text" name="url${sectionType.name()}" value="${company.url}"><br/>
+                                <h5>Периоды занятости:</h5>
+                                <c:forEach var="period" items="${company.getPeriods()}" varStatus="periodCounter">
+                                    Период: <input type="date"
+                                                   name="startDate${sectionType.name()}${periodCounter.count}"
+                                                   value="${period.getStartDate()}"> -
+                                    <input type="date" name="endDate${sectionType.name()}${periodCounter.count}"
+                                           value="${period.getEndDate()}">
+                                    Должность:<input type="text" name="title${sectionType.name()}${periodCounter.count}" value="${period.getTitle()}">
+                                    Описание :<input type="text" name="description${sectionType.name()}${periodCounter.count}" value="${period.getDescription()}"><br/>
                                 </c:forEach>
-                                Период: <input type="date" name="startDate"> -
-                                <input type="date" name="endDate" value="max">
-                                Должность:<textarea name="title"></textarea>
-                                Описание :<textarea name="description"></textarea><br/>
+                                Период: <input type="date" name="startDate${sectionType.name()}0"> -
+                                <input type="date" name="endDate${sectionType.name()}0">
+                                Должность:<input type="text" name="title${sectionType.name()}0">
+                                Описание :<input type="text" name="description${sectionType.name()}0"><br/>
                             </div>
                         </c:forEach>
-                        <div class="box">Организация: <textarea name="name"> </textarea>
-                            Ссылка: <textarea name="url"> </textarea> <br/><br/></div>
+                        <div class="box">Организация: <textarea name="${sectionType}"> </textarea>
+                            Ссылка: <input type="text" name="url${sectionType}"> <br/><br/></div>
                     </label>
                 </dd>
             </dl>

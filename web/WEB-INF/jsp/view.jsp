@@ -22,10 +22,10 @@
         </c:forEach>
 
         <c:forEach var="sectionEntry" items="${resume.sections}">
-                <jsp:useBean id="sectionEntry"
-                             type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.Section>"/>
-            <b><%=sectionEntry.getKey()%> :</b>
-                    <%=HtmlHelper.toHtml(sectionEntry.getKey(), sectionEntry.getValue())%><br/>
+            <jsp:useBean id="sectionEntry"
+                         type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.Section>"/>
+        <b><%=sectionEntry.getKey()%> :</b>
+                <%=HtmlHelper.toHtml(sectionEntry.getKey(), sectionEntry.getValue())%><br/>
         </c:forEach>
     <p>
 </section>

@@ -2,7 +2,6 @@ package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
 import jakarta.servlet.ServletConfig;
@@ -12,6 +11,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,15 +82,50 @@ public class ResumeServlet extends HttpServlet {
             }
         }
         for (SectionType st : SectionType.values()) {
-            String value = request.getParameter(st.getTitle());
-            if (value != null && !value.trim().isEmpty()) {
+            String[] values = request.getParameterValues(st.name());
+            if (values != null && values[0] != null && !values[0].trim().isEmpty()) {
                 switch (st) {
-                    case PERSONAL, OBJECTIVE -> r.addSectionContent(st, new TextSection(value));
+                    case PERSONAL, OBJECTIVE -> r.addSectionContent(st, new TextSection(values[0]));
                     case ACHIEVEMENT, QUALIFICATIONS -> {
-                        r.addSectionContent(st, new ListSection(List.of(value.split("\r\n"))));
+                        r.addSectionContent(st, new ListSection(List.of(values[0].split("\r\n"))));
                     }
                     case EDUCATION, EXPERIENCE -> {
-                        r.addSectionContent(st, new CompanySection());
+                        List<Company> companyList = new ArrayList<>();
+                        String[] urls = request.getParameterValues("url" + st.name());
+                        for (int i = 0; i < values.length; i++) {
+                            String name = values[i];
+                            if (name != null && !name.trim().isEmpty()) {
+                                List<Period> periods = new ArrayList<>();
+                                String[] startDates = request.getParameterValues("startDate" + st.name() + i);
+                                String[] endDates = request.getParameterValues("endDate" + st.name() + i);
+                                String[] titles = request.getParameterValues("title" + st.name() + i);
+                                String[] descriptions = request.getParameterValues("description" + st.name() + i);
+                                if (titles != null && !titles[0].trim().isEmpty()) {
+                                    for (int j = 0; j < titles.length; j++) {
+                                        LocalDate startDate;
+                                        LocalDate endDate;
+                                        try {
+                                            startDate = LocalDate.parse(startDates[j]);
+                                            endDate = LocalDate.parse(endDates[j]);
+                                        } catch (DateTimeException e) {
+                                            startDate = LocalDate.now().minusDays(1);
+                                            endDate = LocalDate.now();
+                                        }
+                                        if (startDate.isBefore(endDate)) {
+                                            periods.add(new Period(startDate, endDate, titles[j], descriptions[j]));
+                                        }
+                                    }
+                                }
+                                URL url;
+                                try {
+                                    url = new URL(urls[i]);
+                                } catch (MalformedURLException e) {
+                                    url = null;
+                                }
+                                companyList.add(new Company(name, url, periods));
+                            }
+                        }
+                        r.addSectionContent(st, new CompanySection(companyList));
                     }
                     default -> throw new NotExistStorageException("Section not exists");
                 }
@@ -100,7 +138,6 @@ public class ResumeServlet extends HttpServlet {
         } catch (NotExistStorageException e) {
             storage.save(r);
         }
-
         response.sendRedirect("resume");
     }
 
