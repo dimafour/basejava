@@ -17,15 +17,17 @@ import java.util.Objects;
 public class Period implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
+    private String title;
     private String description;
+
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     @JsonAdapter(LocalDateJsonAdapter.class)
     private LocalDate startDate;
 
-    private String title;
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     @JsonAdapter(LocalDateJsonAdapter.class)
     private LocalDate endDate;
+    public static final Period TEMPLATE = new Period(null, null, "", "");
 
     public Period() {
     }

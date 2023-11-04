@@ -48,11 +48,25 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             }
-            case "view", "edit" -> {
+            case "view" -> {
                 r = storage.get(uuid);
             }
             case "add" -> {
                 r = Resume.TEMPLATE;
+                for (SectionType st : SectionType.companyValues()) {
+                    List<Company> list = new ArrayList<>();
+                    list.add(Company.TEMPLATE);
+                    r.addSectionContent(st, new CompanySection(list));
+                }
+            }
+            case "edit" -> {
+                r = storage.get(uuid);
+                for (SectionType st : SectionType.companyValues()) {
+                    CompanySection cs = (CompanySection) r.getSections().get(st);
+                    List<Company> companyList = cs.getCompanyList();
+                    companyList.forEach(company -> company.getPeriods().add(Period.TEMPLATE));
+                    companyList.add(Company.TEMPLATE);
+                }
             }
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
@@ -100,19 +114,25 @@ public class ResumeServlet extends HttpServlet {
                                 String[] endDates = request.getParameterValues("endDate" + st.name() + i);
                                 String[] titles = request.getParameterValues("title" + st.name() + i);
                                 String[] descriptions = request.getParameterValues("description" + st.name() + i);
-                                if (titles != null && !titles[0].trim().isEmpty()) {
+                                if (titles != null) {
                                     for (int j = 0; j < titles.length; j++) {
+                                        String title = titles[j];
                                         LocalDate startDate;
                                         LocalDate endDate;
                                         try {
                                             startDate = LocalDate.parse(startDates[j]);
                                             endDate = LocalDate.parse(endDates[j]);
+                                            if (startDate.isAfter(endDate)) {
+                                                LocalDate temp = startDate;
+                                                startDate = endDate;
+                                                endDate = temp;
+                                            }
                                         } catch (DateTimeException e) {
-                                            startDate = LocalDate.now().minusDays(1);
-                                            endDate = LocalDate.now();
+                                            startDate = null;
+                                            endDate = null;
                                         }
-                                        if (startDate.isBefore(endDate)) {
-                                            periods.add(new Period(startDate, endDate, titles[j], descriptions[j]));
+                                        if (title != null && !title.trim().isEmpty()) {
+                                            periods.add(new Period(startDate, endDate, title, descriptions[j]));
                                         }
                                     }
                                 }

@@ -18,6 +18,7 @@ public class Company implements Serializable {
     private String name;
     private URL url;
     private List<Period> periods;
+    public static final Company TEMPLATE = new Company("", null, Period.TEMPLATE);
 
     public Company() {
     }

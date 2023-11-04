@@ -1,6 +1,8 @@
 <%@ page import="com.urise.webapp.model.ContactType" %>
 <%@ page import="com.urise.webapp.model.SectionType" %>
 <%@ page import="com.urise.webapp.util.HtmlHelper" %>
+<%@ page import="com.urise.webapp.model.Company" %>
+<%@ page import="com.urise.webapp.model.Period" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
@@ -58,28 +60,22 @@
                 <dt><h4>${sectionType.title}</h4></dt>
                 <dd>
                     <label>
-                        <c:forEach var="company" items="${(resume.sections.get(sectionType)).getCompanyList()}">
+                        <c:forEach var="company" items="${(resume.sections.get(sectionType)).getCompanyList()}" varStatus="periodCounter">
                             <div class="box"> Организация: <input type="text" name="${sectionType.name()}"
                                                                   value="${company.name}">
                                 Ссылка: <input type="text" name="url${sectionType.name()}" value="${company.url}"><br/>
                                 <h5>Периоды занятости:</h5>
-                                <c:forEach var="period" items="${company.getPeriods()}" varStatus="periodCounter">
+                                <c:forEach var="period" items="${company.getPeriods()}">
                                     Период: <input type="date"
-                                                   name="startDate${sectionType.name()}${periodCounter.count}"
+                                                   name="startDate${sectionType.name()}${periodCounter.index}"
                                                    value="${period.getStartDate()}"> -
-                                    <input type="date" name="endDate${sectionType.name()}${periodCounter.count}"
+                                    <input type="date" name="endDate${sectionType.name()}${periodCounter.index}"
                                            value="${period.getEndDate()}">
-                                    Должность:<input type="text" name="title${sectionType.name()}${periodCounter.count}" value="${period.getTitle()}">
-                                    Описание :<input type="text" name="description${sectionType.name()}${periodCounter.count}" value="${period.getDescription()}"><br/>
+                                    Должность:<input type="text" name="title${sectionType.name()}${periodCounter.index}" value="${period.getTitle()}">
+                                    Описание :<input type="text" name="description${sectionType.name()}${periodCounter.index}" value="${period.getDescription()}"><br/>
                                 </c:forEach>
-                                Период: <input type="date" name="startDate${sectionType.name()}0"> -
-                                <input type="date" name="endDate${sectionType.name()}0">
-                                Должность:<input type="text" name="title${sectionType.name()}0">
-                                Описание :<input type="text" name="description${sectionType.name()}0"><br/>
                             </div>
                         </c:forEach>
-                        <div class="box">Организация: <textarea name="${sectionType}"> </textarea>
-                            Ссылка: <input type="text" name="url${sectionType}"> <br/><br/></div>
                     </label>
                 </dd>
             </dl>
