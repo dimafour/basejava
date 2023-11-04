@@ -1,8 +1,6 @@
 <%@ page import="com.urise.webapp.model.ContactType" %>
 <%@ page import="com.urise.webapp.model.SectionType" %>
 <%@ page import="com.urise.webapp.util.HtmlHelper" %>
-<%@ page import="com.urise.webapp.model.Company" %>
-<%@ page import="com.urise.webapp.model.Period" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
