@@ -1,5 +1,6 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.Config;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
@@ -7,6 +8,7 @@ import com.urise.webapp.model.Resume;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,7 +18,7 @@ import static com.urise.webapp.model.ResumeTestData.createResume;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
-    protected static final String STORAGE_DIR = "C:\\Users\\dimaf\\IdeaProjects\\basejava\\src\\com\\urise\\webapp\\storage\\Saved";
+    protected static final File STORAGE_DIR = Config.getInstance().getStorageDir();
 
     protected final Storage storage;
     protected final List<Resume> expectedList = new ArrayList<>();
@@ -138,7 +140,7 @@ public abstract class AbstractStorageTest {
     public void update() {
         Resume r;
         try {
-            r = createResume(UUID3, "Peter Petrov");
+            r = createResume(UUID3, "Peter Petrovich");
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }

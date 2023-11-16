@@ -79,16 +79,16 @@ public class ResumeTestData {
 
         Company coursera = new Company("Coursera",
                 new URL("https://www.coursera.org/learn/progfun1"),
-                new Period(LocalDate.of(2013, 3, 1), LocalDate.of(2013, 5, 30), "", "'Functional Programming Principles in Scala' by Martin Odersky"));
+                new Period(LocalDate.of(2013, 3, 1), LocalDate.of(2013, 5, 30), "Повышение квалификации", "'Functional Programming Principles in Scala' by Martin Odersky"));
         Company luxoft = new Company("Luxoft",
                 new URL("http://www.luxoft-training.ru/training/catalog/course.html?ID=22366"),
-                new Period(LocalDate.of(2011, 3, 1), LocalDate.of(2011, 4, 30), "", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'"));
+                new Period(LocalDate.of(2011, 3, 1), LocalDate.of(2011, 4, 30), "Повышение квалификации", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'"));
         Company siemens = new Company("Siemens AG",
                 new URL("http://www.siemens.ru/"),
-                new Period(LocalDate.of(2005, 1, 1), LocalDate.of(2013, 4, 30), "", "3 месяца обучения мобильным IN сетям (Берлин)"));
+                new Period(LocalDate.of(2005, 1, 1), LocalDate.of(2013, 4, 30), "Повышение квалификации", "3 месяца обучения мобильным IN сетям (Берлин)"));
         Company alcatel = new Company("Alcatel",
                 new URL("http://www.alcatel.ru/"),
-                new Period(LocalDate.of(1997, 9, 1), LocalDate.of(1998, 3, 30), "", "6 месяцев обучения цифровым телефонным сетям (Москва)"));
+                new Period(LocalDate.of(1997, 9, 1), LocalDate.of(1998, 3, 30), "Повышение квалификации", "6 месяцев обучения цифровым телефонным сетям (Москва)"));
         Company itmo = new Company("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
                 new URL("http://www.ifmo.ru/"),
                 new Period(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 30), "Аспирантура", "программист С, С++"),

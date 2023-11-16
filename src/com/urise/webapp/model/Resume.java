@@ -18,14 +18,13 @@ public class Resume implements Comparable<Resume>, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     private final String uuid;
-    private final String fullName;
+    private String fullName;
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
-    protected static String DEFAULT_NAME = "Name is absent";
+    public static final Resume TEMPLATE = new Resume(null, null);
 
     public Resume() {
         this.uuid = UUID.randomUUID().toString();
-        this.fullName = DEFAULT_NAME;
     }
 
     public Resume(String fullName) {
@@ -44,6 +43,10 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public Map<ContactType, String> getContacts() {
@@ -105,5 +108,4 @@ public class Resume implements Comparable<Resume>, Serializable {
         }
         return sb.toString();
     }
-
 }

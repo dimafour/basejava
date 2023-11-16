@@ -1,5 +1,7 @@
 package com.urise.webapp.model;
 
+import java.util.List;
+
 public enum SectionType {
     PERSONAL("Личные качества"),
     OBJECTIVE("Позиция"),
@@ -16,6 +18,14 @@ public enum SectionType {
 
     public String getTitle() {
         return title;
+    }
+
+    public static List<SectionType> companyValues() {
+        return List.of(EXPERIENCE, EDUCATION);
+    }
+
+    public static List<SectionType> textListValues() {
+        return List.of(PERSONAL, OBJECTIVE, ACHIEVEMENT, QUALIFICATIONS);
     }
 
     @Override
